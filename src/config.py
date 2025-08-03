@@ -8,9 +8,3 @@ class BaseConfig(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore"  # Игнорировать лишние переменные в .env
     )
-
-class BotConfig(BaseConfig):
-    token: str
-
-
-bot_config = BotConfig()
