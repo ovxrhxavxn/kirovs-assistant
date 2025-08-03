@@ -21,6 +21,9 @@ site_build
 docs.zip
 archive.zip
 
+# SQLlite
+*.db
+
 # vim temporary files
 *~
 .*.sw?
