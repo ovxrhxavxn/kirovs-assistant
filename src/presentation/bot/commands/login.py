@@ -30,7 +30,7 @@ async def process_username(
     user = await auth_user_service.get_by_domain_name(message.text)
 
     if user:
-        await message.answer(Caption.UNUQUE_ERROR)
+        await message.answer(Caption.UNIQUE_ERROR)
         return
 
     await state.update_data(username=message.text)
