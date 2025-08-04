@@ -3,6 +3,7 @@ from typing import Protocol, TypeVar, TypeAlias
 from ldap3 import Server, Connection
 from sqlalchemy import select, insert, delete
 import aiohttp
+from aiohttp.web_exceptions import HTTPError
 
 from ..database.ldap.config import config as ldap_config
 from ..database.sqlalchemy.config import async_session_maker
@@ -26,11 +27,15 @@ class WeatherRepository:
 
     async def get_current(self, city: str):
         async with aiohttp.ClientSession() as session:
-            response = await session.get(
-                f'{weather_api_config.url}current.json?q={city}&key={weather_api_config.weather_api_token}'
-                )
-            result = await response.json()
-            return result['current']
+            try:
+                response = await session.get(
+                    f'{weather_api_config.url}current.json?q={city}&key={weather_api_config.weather_api_token}'
+                    )
+                result = await response.json()
+                return result['current']
+            
+            except HTTPError:
+                pass
 
 
 class AbstractLDAPRepository(Protocol):
