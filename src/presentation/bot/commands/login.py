@@ -1,5 +1,3 @@
-
-
 from aiogram import Router
 from aiogram.filters.command import Command
 from aiogram import types
@@ -9,7 +7,7 @@ from .logout import router as logout_router
 from ..enums import Caption
 from ..keyboards import get_main_keyboard, get_inline_support_keyboard
 from ..fsms import AuthStates
-from ....business_logic.dependencies import get_ldap_service, get_auth_user_service
+from ....business_logic.dependencies import AuthenticatedUserService, LDAPService
 from ....data_access.shemas import AuthenticatedUser
 
 
@@ -24,9 +22,10 @@ async def command_login(message: types.Message, state: FSMContext):
 
 
 @router.message(AuthStates.waiting_for_username)
-async def process_username(message: types.Message, state: FSMContext):
-    
-    auth_user_service = get_auth_user_service()
+async def process_username(
+        message: types.Message, 
+        state: FSMContext, 
+        auth_user_service: AuthenticatedUserService):
 
     user = await auth_user_service.get_by_domain_name(message.text)
 
@@ -42,7 +41,12 @@ async def process_username(message: types.Message, state: FSMContext):
     
 
 @router.message(AuthStates.waiting_for_password)
-async def process_password(message: types.Message, state: FSMContext):
+async def process_password(
+    message: types.Message, 
+    state: FSMContext,
+    ldap_service: LDAPService,
+    auth_user_service: AuthenticatedUserService):
+
     user_data = await state.get_data()
     username = user_data.get("username")
     password = message.text
@@ -50,8 +54,6 @@ async def process_password(message: types.Message, state: FSMContext):
     verify_msg = await message.answer("Проверка данных...")
 
     # Perform the authentication check
-    ldap_service = get_ldap_service()
-    auth_user_service = get_auth_user_service()
     if await ldap_service.check_ad_credentials(username, password):
         await auth_user_service.add(AuthenticatedUser(nickname=message.from_user.username, domain_name=username))
         await message.answer(
