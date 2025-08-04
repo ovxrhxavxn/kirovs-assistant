@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher
 from .config import bot_config
 from .replies import router as replies_router
 from .commands.start import router as start_router
+from .commands.utils import router as utils_router
 from ...business_logic.dependencies import (
     get_auth_user_service, 
     get_ldap_service, 
@@ -14,7 +15,7 @@ from ...business_logic.dependencies import (
 
 dp = Dispatcher()
 bot = Bot(token=bot_config.bot_token)
-routers = [start_router, replies_router]
+routers = [start_router, replies_router, utils_router]
 dp.include_routers(*routers)
 
 async def start():
