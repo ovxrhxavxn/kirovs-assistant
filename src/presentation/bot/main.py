@@ -5,6 +5,11 @@ from aiogram import Bot, Dispatcher
 from .config import bot_config
 from .replies import router as replies_router
 from .commands.start import router as start_router
+from ...business_logic.dependencies import (
+    get_auth_user_service, 
+    get_ldap_service, 
+    get_weather_service
+)
 
 
 dp = Dispatcher()
@@ -14,7 +19,12 @@ dp.include_routers(*routers)
 
 async def start():
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+    await dp.start_polling(
+            bot, 
+            auth_user_service = get_auth_user_service(),
+            ldap_service = get_ldap_service(),
+            weather_service = get_weather_service()
+        )
 
 
 if __name__ == "__main__":
