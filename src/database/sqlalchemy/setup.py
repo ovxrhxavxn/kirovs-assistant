@@ -9,8 +9,7 @@ class Base(DeclarativeBase):
     pass
 
 
-async_engine = create_async_engine(
-             
+async_engine = create_async_engine(  
             url=sql_config.host, connect_args={"check_same_thread": False}
         )
         
@@ -18,13 +17,10 @@ async_session_maker: type[AsyncSession] = sessionmaker(bind=async_engine, class_
 
 
 async def get_async_session():
-
     async with async_session_maker() as session:
-
         yield session
 
         
 async def create_tables():
-        
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
