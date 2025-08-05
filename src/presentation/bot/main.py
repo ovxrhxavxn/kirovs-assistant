@@ -20,7 +20,7 @@ routers = [start_router, replies_router, utils_router]
 dp.include_routers(*routers)
 
 auth_service = get_auth_user_service()
-dp.update.outer_middleware(AuthMiddleware(auth_service))
+dp.message.outer_middleware(AuthMiddleware(auth_service))
 
 async def start():
     await bot.delete_webhook(drop_pending_updates=True)
