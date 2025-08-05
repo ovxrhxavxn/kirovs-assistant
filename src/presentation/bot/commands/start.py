@@ -5,8 +5,6 @@ from aiogram.filters.command import CommandStart
 from ..enums import Caption
 from ..keyboards import get_inline_support_keyboard, get_main_keyboard
 from ....data_access.shemas import AuthenticatedUserFromDB
-from ..middlewares import AuthMiddleware
-from ....business_logic.dependencies import get_auth_user_service
 from .login import router as login_router
 
 
