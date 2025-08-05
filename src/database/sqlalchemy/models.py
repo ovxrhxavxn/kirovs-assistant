@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .annotated_types import intpk
-from .config import Base
+from .setup import Base
 
 
 class AuthenticatedUser(Base):

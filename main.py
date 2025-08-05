@@ -1,7 +1,7 @@
 import asyncio
 
 from src.presentation.bot.main import start as start_bot
-from src.database.sqlalchemy.config import create_tables
+from database.sqlalchemy.setup import create_tables
 
 
 async def main():

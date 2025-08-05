@@ -6,7 +6,7 @@ import aiohttp
 from aiohttp.web_exceptions import HTTPError
 
 from ..database.ldap.config import config as ldap_config
-from ..database.sqlalchemy.config import async_session_maker
+from ..database.sqlalchemy.setup import async_session_maker
 from ..database.sqlalchemy.models import AuthenticatedUser
 from .external_api.config import weather_api_config
 
