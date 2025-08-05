@@ -11,6 +11,7 @@ from ...business_logic.dependencies import (
     get_ldap_service, 
     get_weather_service
 )
+from .middlewares import AuthMiddleware
 
 
 dp = Dispatcher()
