@@ -12,7 +12,6 @@ from .login import router as login_router
 
 router = Router()
 router.include_router(login_router)
-router.message.middleware(AuthMiddleware(get_auth_user_service()))
 
 @router.message(CommandStart())
 async def start(message: types.Message, user: AuthenticatedUserFromDB | None):
