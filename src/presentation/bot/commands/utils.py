@@ -6,7 +6,7 @@ from aiogram.filters import Command
 from ..enums import HeadsOrTails
 
 
-router = Router("Utils Router")
+router = Router()
 
 @router.message(Command("flip"))
 async def ping(msg: types.Message):
