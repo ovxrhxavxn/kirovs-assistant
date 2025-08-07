@@ -22,6 +22,9 @@ class AbstractWeatherRepository(Protocol):
     async def get_current(self, city: str) -> dict:
         ...
 
+    async def get_forecast_upon(self, days: int, city: str) -> list[dict]:
+        ...
+
 
 class WeatherRepository:
 
@@ -33,6 +36,18 @@ class WeatherRepository:
                     )
                 result = await response.json()
                 return result['current']
+            
+            except HTTPError:
+                pass
+
+    async def get_forecast_upon(self, days: int, city: str):
+        async with aiohttp.ClientSession() as session:
+            try:
+                response = await session.get(
+                    f'{weather_api_config.url}forecast.json?q={city}&days={days}&key={weather_api_config.weather_api_token}'
+                    )
+                result: list = await response.json()
+                return result['forecast']['forecastday']
             
             except HTTPError:
                 pass
@@ -68,7 +83,7 @@ class LDAPRepository:
         
 
 class SQLAlchemyRepository[Model](Protocol):
-    model: type[Model] = ...
+    model: Model = ...
 
 
 class AbstractAuthenticatedUserRepository[Entity](Protocol):
