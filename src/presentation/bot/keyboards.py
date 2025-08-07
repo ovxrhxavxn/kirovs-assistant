@@ -16,7 +16,7 @@ def get_main_keyboard():
     return kb.as_markup()
 
 
-def get_inline_cloud_keybord():
+def get_inline_cloud_keyboard():
     kb = InlineKeyboardBuilder()
     kb.button(text=EnterCloudKeyboardButton.NEXTCLOUD, url=ResourcePath.CLOUD)
     kb.adjust(1)
