@@ -5,7 +5,12 @@ from ..data_access.repositories import (
     AbstractAuthenticatedUserRepository,
     AbstractWeatherRepository
 )
-from ..data_access.shemas import AuthenticatedUser, AuthenticatedUserFromDB, Weather
+from ..data_access.shemas import (
+    AuthenticatedUser, 
+    AuthenticatedUserFromDB, 
+    CurrentWeather,
+    DailyForecast
+)
 
 
 class LDAPService:
@@ -48,5 +53,20 @@ class WeatherService:
         self._repo = repo()
 
     async def get_current(self, city: str = "Карабаш"):
-        data = await self._repo.get_current(city)
-        return Weather.model_validate(data)
+        current_weather = await self._repo.get_current(city)
+        return CurrentWeather.model_validate(current_weather)
+    
+
+    # --- THIS IS THE FIXED METHOD ---
+    async def get_forecast_upon(self, days: int = 1, city: str = "Карабаш") -> list[DailyForecast]:
+        """
+        Fetches forecast data from the repository and validates it into a list of DailyForecast objects.
+        """
+        # The repo now safely returns a list (or an empty one on error)
+        forecast_data = await self._repo.get_forecast_upon(days, city)
+
+        # A clean list comprehension is all we need now!
+        # Pydantic will handle all the nested validation.
+        validated_forecasts = [DailyForecast.model_validate(day_data) for day_data in forecast_data]
+
+        return validated_forecasts
