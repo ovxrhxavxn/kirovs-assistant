@@ -42,7 +42,7 @@ async def send_cloud_link(message: types.Message):
     await message.answer("Нажмите ниже, чтобы войти в облако:", reply_markup=get_inline_cloud_keyboard())
 
 
-@router.message(F.text == MainKeyboardButton.GET_WEATHER)
+@router.message(F.text == MainKeyboardButton.GET_DAY_WEATHER)
 async def send_weather_info(
     message: types.Message,
     weather_service: WeatherService):
@@ -50,7 +50,7 @@ async def send_weather_info(
     city = "Карабаш" # Hardcoding for now as it's the default in the service
 
     # New way: we expect a list of DailyForecast objects
-    forecast_list: list[DailyForecast] = await weather_service.get_forecast_upon(days=7)
+    forecast_list: list[DailyForecast] = await weather_service.get_forecast_upon()
 
     # --- THIS IS THE MAIN FIX ---
 
@@ -90,6 +90,29 @@ async def send_weather_info(
                 f"(ощущается как {hour_data.feelslike_c}°C)"
             )
             text_parts.append(line)
+
+    final_text = "\n".join(text_parts)
+
+    await message.answer(final_text, parse_mode=ParseMode.HTML)
+
+
+@router.message(F.text == MainKeyboardButton.GET_CURRENT_WEATHER)
+async def get_current_weather(
+    message: types.Message,
+    weather_service: WeatherService):
+
+    city = "Карабаш"
+    
+    current_weather = await weather_service.get_current()
+
+    summary_parts = [
+        f"<b>Текущая погода в г. {city}:</b>\n",
+        f"🌡️ Температура: <b>{current_weather.temp_c}°C</b>",
+        f"💨 Ветер: <b>{current_weather.wind_kph} км/ч</b>"
+    ]
+
+    # The rest of the logic is almost identical, just using the new variable names
+    text_parts = ["\n".join(summary_parts)]
 
     final_text = "\n".join(text_parts)
 
