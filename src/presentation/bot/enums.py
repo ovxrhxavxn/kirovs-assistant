@@ -4,7 +4,8 @@ from enum import StrEnum
 class MainKeyboardButton(StrEnum):
     CONNECT_WIFI = "Подключение к Wi-Fi 🛜"
     ENTER_CLOUD = "Войти в облако ☁️"
-    GET_WEATHER = "Узнать текущую погоду 🌤️"
+    GET_DAY_WEATHER = "Узнать погоду на день 🌤️"
+    GET_CURRENT_WEATHER = "Узнать текущую погоду 🌤️"
     
 
 class EnterCloudKeyboardButton(StrEnum):
