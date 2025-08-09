@@ -12,7 +12,7 @@ def get_main_keyboard():
     kb = ReplyKeyboardBuilder()
     for button in MainKeyboardButton:
         kb.button(text=button)
-    kb.adjust(3)
+    kb.adjust(len(MainKeyboardButton))
     return kb.as_markup()
 
 
